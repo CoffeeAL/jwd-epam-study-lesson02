@@ -19,6 +19,9 @@ public final class BasketService {
     private static final BallService ballService = new BallService();
     private Basket basket;
 
+    public BasketService() {
+    }
+
     public BasketService(Basket basket) {
         this.basket = basket;
     }

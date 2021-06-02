@@ -27,8 +27,4 @@ public final class BallService {
     public Ball getBall() {
         return ball;
     }
-
-    public void setBall(Ball ball) {
-        this.ball = ball;
-    }
 }
