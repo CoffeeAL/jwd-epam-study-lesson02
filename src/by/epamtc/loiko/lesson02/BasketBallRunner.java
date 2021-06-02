@@ -1,6 +1,6 @@
 package by.epamtc.loiko.lesson02;
 
-import by.epamtc.loiko.lesson02.emunerable.Color;
+import by.epamtc.loiko.lesson02.enumerable.Color;
 import by.epamtc.loiko.lesson02.entity.Ball;
 import by.epamtc.loiko.lesson02.entity.Basket;
 import by.epamtc.loiko.lesson02.exception.NotAvailableBallException;

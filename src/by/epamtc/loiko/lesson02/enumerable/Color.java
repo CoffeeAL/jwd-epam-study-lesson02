@@ -1,4 +1,4 @@
-package by.epamtc.loiko.lesson02.emunerable;
+package by.epamtc.loiko.lesson02.enumerable;
 
 /**
  * @author Alexey Loiko

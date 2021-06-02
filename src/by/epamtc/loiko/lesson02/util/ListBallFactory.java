@@ -1,6 +1,6 @@
 package by.epamtc.loiko.lesson02.util;
 
-import by.epamtc.loiko.lesson02.emunerable.Color;
+import by.epamtc.loiko.lesson02.enumerable.Color;
 import by.epamtc.loiko.lesson02.entity.Ball;
 import by.epamtc.loiko.lesson02.exception.NotPositiveValueException;
 import by.epamtc.loiko.lesson02.service.BallService;

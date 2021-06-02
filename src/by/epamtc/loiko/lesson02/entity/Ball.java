@@ -1,6 +1,6 @@
 package by.epamtc.loiko.lesson02.entity;
 
-import by.epamtc.loiko.lesson02.emunerable.Color;
+import by.epamtc.loiko.lesson02.enumerable.Color;
 
 import java.io.Serializable;
 
