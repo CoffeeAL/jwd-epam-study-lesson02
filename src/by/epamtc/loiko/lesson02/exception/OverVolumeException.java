@@ -4,7 +4,7 @@ package by.epamtc.loiko.lesson02.exception;
  * @author Alexey Loiko
  * @project jwd-epam-study
  */
-public class OverVolumeException extends RuntimeException {
+public class OverVolumeException extends Exception {
 
     public OverVolumeException(String message) {
         super(message);

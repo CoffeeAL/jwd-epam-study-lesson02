@@ -1,10 +1,8 @@
 package by.epamtc.loiko.lesson02.entity;
 
-import by.epamtc.loiko.lesson02.exception.NegativeValueException;
 import by.epamtc.loiko.lesson02.emunerable.Color;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * @author Alexey Loiko
@@ -15,14 +13,12 @@ public class Ball implements Serializable {
     private Color color;
     private double weight;
     private double volume;
+    private boolean isInBasket;
 
     public Ball() {
     }
 
-    public Ball(Color color, double weight, double volume) throws NegativeValueException {
-        if (weight < 0.0 || volume < 0) {
-            throw new NegativeValueException("Вес и объём мяча не могут принимать отрицательные значения.");
-        }
+    public Ball(Color color, double weight, double volume) {
         this.color = color;
         this.weight = weight;
         this.volume = volume;
@@ -52,19 +48,29 @@ public class Ball implements Serializable {
         this.volume = volume;
     }
 
+    public boolean isInBasket() {
+        return isInBasket;
+    }
+
+    public void setInBasket(boolean inBasket) {
+        isInBasket = inBasket;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Ball)) return false;
         Ball ball = (Ball) o;
-        return Double.compare(ball.weight, weight) == 0 &&
-                Double.compare(ball.volume, volume) == 0 &&
-                color == ball.color;
+        return weight == ball.weight && volume == ball.volume && color == ball.color;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(color, weight, volume);
+        int result = 17;
+        result = 31 * result + Double.hashCode(weight);
+        result = 31 * result + Double.hashCode(volume);
+        result = 31 * result + color.hashCode();
+        return result;
     }
 
     @Override

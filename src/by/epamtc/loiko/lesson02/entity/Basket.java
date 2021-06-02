@@ -1,8 +1,5 @@
 package by.epamtc.loiko.lesson02.entity;
 
-import by.epamtc.loiko.lesson02.exception.OverVolumeException;
-import by.epamtc.loiko.lesson02.exception.OverWeightException;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +11,8 @@ import java.util.List;
 public class Basket implements Serializable {
 
     private double maxWeightCapacity;
-
     private double maxVolumeCapacity;
-
-    private List<Ball> balls = new ArrayList<>();
+    private List<Ball> balls;
 
     public Basket() {
     }
@@ -25,16 +20,56 @@ public class Basket implements Serializable {
     public Basket(double maxWeightCapacity, double maxVolumeCapacity) {
         this.maxWeightCapacity = maxWeightCapacity;
         this.maxVolumeCapacity = maxVolumeCapacity;
+        balls = new ArrayList<>();
     }
 
     public void putBallInBasket(Ball ball) {
-        if (this.balls.stream().mapToDouble(w -> w.getWeight()).sum() + ball.getWeight() > this.maxWeightCapacity) {
-            throw new OverWeightException("При добавлении мяча корзина будет перегружена.");
-        }
-        if (this.balls.stream().mapToDouble(w -> w.getVolume()).sum() + ball.getVolume() > this.maxVolumeCapacity) {
-            throw new OverVolumeException("Мяч уже не помещается в корзину.");
-        }
-        this.balls.add(ball);
+        balls.add(ball);
+        ball.setInBasket(true);
+    }
+
+    public void putBallsInBasket(List<Ball> balls) {
+        this.balls.addAll(balls);
+        balls.forEach(b -> b.setInBasket(true));
+    }
+
+    public void pullBallFromBasket(Ball ball) {
+        balls.remove(ball);
+        ball.setInBasket(false);
+    }
+
+    public double calculateBallsInBasketWeight() {
+        double totalWeight = balls.stream().mapToDouble(w -> w.getWeight()).sum();
+        return totalWeight;
+    }
+
+    public double calculateBallsInBasketVolume() {
+        double totalVolume = balls.stream().mapToDouble(v -> v.getVolume()).sum();
+        return totalVolume;
+    }
+
+    public double weightLeft() {
+        return maxWeightCapacity - this.calculateBallsInBasketWeight();
+    }
+
+    public double volumeLeft() {
+        return maxVolumeCapacity - this.calculateBallsInBasketVolume();
+    }
+
+    public double getMaxWeightCapacity() {
+        return maxWeightCapacity;
+    }
+
+    public void setMaxWeightCapacity(double maxWeightCapacity) {
+        this.maxWeightCapacity = maxWeightCapacity;
+    }
+
+    public double getMaxVolumeCapacity() {
+        return maxVolumeCapacity;
+    }
+
+    public void setMaxVolumeCapacity(double maxVolumeCapacity) {
+        this.maxVolumeCapacity = maxVolumeCapacity;
     }
 
     public List<Ball> getBalls() {
@@ -43,5 +78,31 @@ public class Basket implements Serializable {
 
     public void setBalls(List<Ball> balls) {
         this.balls = balls;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Basket)) return false;
+        Basket basket = (Basket) o;
+        if (maxWeightCapacity != basket.maxWeightCapacity || maxVolumeCapacity != basket.maxVolumeCapacity) {
+            return false;
+        }
+        return balls.equals(basket.balls);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + Double.hashCode(maxWeightCapacity);
+        result = 31 * result + Double.hashCode(maxVolumeCapacity);
+        result = 31 * result + balls.hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Basket{maxWeightCapacity = " + maxWeightCapacity + ", maxVolumeCapacity = " + maxVolumeCapacity +
+                ", balls = " + balls + "}";
     }
 }

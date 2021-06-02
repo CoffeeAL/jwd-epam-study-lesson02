@@ -4,7 +4,7 @@ package by.epamtc.loiko.lesson02.exception;
  * @author Alexey Loiko
  * @project jwd-epam-study
  */
-public class OverWeightException extends RuntimeException {
+public class OverWeightException extends Exception {
 
     public OverWeightException(String message) {
         super(message);

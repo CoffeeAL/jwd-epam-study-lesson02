@@ -15,14 +15,14 @@ public enum Color {
     WHITE("белых"),
     PINK("розовых");
 
-    private String string;
+    private String colorName;
 
     Color(String name) {
-        string = name;
+        colorName = name;
     }
 
     @Override
     public String toString() {
-        return string;
+        return colorName;
     }
 }
