@@ -28,7 +28,7 @@ public class Basket implements Serializable {
         return balls.add(ball);
     }
 
-    public boolean putBallsInBasket(List<Ball> balls) {
+    public boolean putCollectionOfBalls(List<Ball> balls) {
         return this.balls.addAll(balls);
     }
 

@@ -7,6 +7,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * @author Alexey Loiko
  * @project jwd-epam-study-lesson02
@@ -60,6 +62,12 @@ public class BasketServiceTest {
     }
 
     @Test
+    public void checkAttemptPutIllegalBall() {
+        Ball ball = new Ball(Color.BLACK, 0.0, 3.0);
+        Assert.assertFalse(service.putBall(ball));
+    }
+
+    @Test
     public void checkAttemptPutOverweightBall() {
         Ball ball = new Ball(Color.YELLOW, 2.0, 3.0);
         Assert.assertFalse(service.putBall(ball));
@@ -84,5 +92,20 @@ public class BasketServiceTest {
     @Test
     public void checkPullNullBall() {
         Assert.assertFalse(service.pullBall(null));
+    }
+
+    @Test
+    public void checkPutCollectionOfBalls() {
+        List<Ball> ballsFromSource = service.getBasket().getBalls();
+        Basket targetBasket = new Basket(50.0, 50.0);
+        service.setBasket(targetBasket);
+        Assert.assertTrue(service.putCollectionBalls(ballsFromSource));
+    }
+
+    @Test
+    public void checkPutNullCollectionOfBalls() {
+        Basket targetBasket = new Basket(50.0, 50.0);
+        service.setBasket(targetBasket);
+        Assert.assertFalse(service.putCollectionBalls(null));
     }
 }

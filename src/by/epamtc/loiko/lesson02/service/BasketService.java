@@ -53,10 +53,10 @@ public final class BasketService {
     }
 
     private boolean isNotValidBallOrBasketParameters() {
-        return !ballService.areCorrectWeightAndVolume() || !areCorrectMaxWeightAndVolumeCapacity();
+        return !ballService.areLegalWeightAndVolume() || !areLegalMaxWeightAndVolumeCapacity();
     }
 
-    private boolean areCorrectMaxWeightAndVolumeCapacity() {
+    private boolean areLegalMaxWeightAndVolumeCapacity() {
         return basket.getMaxWeightCapacity() > 0 && basket.getMaxVolumeCapacity() > 0;
     }
 
@@ -65,7 +65,7 @@ public final class BasketService {
                 basket.volumeLeft() >= ball.getVolume();
     }
 
-    public boolean putBalls(List<Ball> balls) {
+    public boolean putCollectionBalls(List<Ball> balls) {
         if (balls == null) {
             return false;
         }
@@ -75,7 +75,17 @@ public final class BasketService {
                 return false;
             }
         }
-        return checkPossibilityPutCollectionOfBallsInBasket(balls) ? basket.putBallsInBasket(balls) : false;
+        return checkPossibilityPutCollectionOfBallsInBasket(balls) ? basket.putCollectionOfBalls(balls) : false;
+    }
+
+    private boolean checkPossibilityPutCollectionOfBallsInBasket(List<Ball> balls) {
+        double totalWeightBalls = 0.0;
+        double totalVolumeBalls = 0.0;
+        for (Ball ball : balls) {
+            totalWeightBalls += ball.getWeight();
+            totalVolumeBalls += ball.getVolume();
+        }
+        return totalWeightBalls <= basket.weightLeft() && totalVolumeBalls <= basket.volumeLeft();
     }
 
     public boolean pullBall(Ball ball) {
@@ -87,16 +97,6 @@ public final class BasketService {
             return false;
         }
         return checkPossibilityPullBallFromBasket(ball) ? basket.pullBallFromBasket(ball) : false;
-    }
-
-    private boolean checkPossibilityPutCollectionOfBallsInBasket(List<Ball> balls) {
-        double totalWeightBalls = 0.0;
-        double totalVolumeBalls = 0.0;
-        for (Ball ball : balls) {
-            totalWeightBalls += ball.getWeight();
-            totalVolumeBalls += ball.getVolume();
-        }
-        return totalWeightBalls <= basket.weightLeft() && totalVolumeBalls <= basket.volumeLeft();
     }
 
     private boolean checkPossibilityPullBallFromBasket(Ball ball) {

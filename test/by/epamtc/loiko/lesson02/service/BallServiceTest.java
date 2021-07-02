@@ -17,13 +17,13 @@ public class BallServiceTest {
     public void checkLegalBallParameters() {
         Ball ball = new Ball(Color.BLACK, 56.0, 19.3);
         service.setBall(ball);
-        Assert.assertTrue(service.areCorrectWeightAndVolume());
+        Assert.assertTrue(service.areLegalWeightAndVolume());
     }
 
     @Test
     public void checkIllegalBallParameters() {
         Ball ball = new Ball(Color.RED, -56.0, 19.3);
         service.setBall(ball);
-        Assert.assertFalse(service.areCorrectWeightAndVolume());
+        Assert.assertFalse(service.areLegalWeightAndVolume());
     }
 }

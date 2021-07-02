@@ -26,7 +26,7 @@ public class BasketBallRunner {
         List<Ball> balls = ListBallFactory.createListOfBalls();
         Basket basket = new Basket(20.0, 20.0);
         BasketService basketService = new BasketService(basket);
-        basketService.putBalls(balls);
+        basketService.putCollectionBalls(balls);
         double totalWeight = basketService.findTotalWeight();
         long amountBlueBalls = basketService.findColorBalls(BLUE_COLOR);
         try {

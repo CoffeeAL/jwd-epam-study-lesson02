@@ -18,7 +18,7 @@ public final class BallService {
         this.ball = ball;
     }
 
-    public boolean areCorrectWeightAndVolume() {
+    public boolean areLegalWeightAndVolume() {
         return ball.getWeight() > 0 && ball.getVolume() > 0;
     }
 
