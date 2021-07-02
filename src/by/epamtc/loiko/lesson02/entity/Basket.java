@@ -12,48 +12,52 @@ public class Basket implements Serializable {
 
     private double maxWeightCapacity;
     private double maxVolumeCapacity;
-    private List<Ball> balls;
+    private List<Ball> balls = new ArrayList<>();
 
     public Basket() {
+        maxVolumeCapacity = 1.0;
+        maxVolumeCapacity = 1.0;
     }
 
     public Basket(double maxWeightCapacity, double maxVolumeCapacity) {
         this.maxWeightCapacity = maxWeightCapacity;
         this.maxVolumeCapacity = maxVolumeCapacity;
-        balls = new ArrayList<>();
     }
 
-    public void putBallInBasket(Ball ball) {
-        balls.add(ball);
-        ball.setInBasket(true);
+    public boolean putBallInBasket(Ball ball) {
+        return balls.add(ball);
     }
 
-    public void putBallsInBasket(List<Ball> balls) {
-        this.balls.addAll(balls);
-        balls.forEach(b -> b.setInBasket(true));
+    public boolean putBallsInBasket(List<Ball> balls) {
+        return this.balls.addAll(balls);
     }
 
-    public void pullBallFromBasket(Ball ball) {
-        balls.remove(ball);
-        ball.setInBasket(false);
+    public boolean pullBallFromBasket(Ball ball) {
+        return balls.remove(ball);
     }
 
     public double calculateBallsInBasketWeight() {
-        double totalWeight = balls.stream().mapToDouble(w -> w.getWeight()).sum();
+        double totalWeight = 0.0;
+        for (Ball ball : balls) {
+            totalWeight += ball.getWeight();
+        }
         return totalWeight;
     }
 
     public double calculateBallsInBasketVolume() {
-        double totalVolume = balls.stream().mapToDouble(v -> v.getVolume()).sum();
+        double totalVolume = 0.0;
+        for (Ball ball : balls) {
+            totalVolume += ball.getVolume();
+        }
         return totalVolume;
     }
 
     public double weightLeft() {
-        return maxWeightCapacity - this.calculateBallsInBasketWeight();
+        return maxWeightCapacity - calculateBallsInBasketWeight();
     }
 
     public double volumeLeft() {
-        return maxVolumeCapacity - this.calculateBallsInBasketVolume();
+        return maxVolumeCapacity - calculateBallsInBasketVolume();
     }
 
     public double getMaxWeightCapacity() {
@@ -85,10 +89,8 @@ public class Basket implements Serializable {
         if (this == o) return true;
         if (!(o instanceof Basket)) return false;
         Basket basket = (Basket) o;
-        if (maxWeightCapacity != basket.maxWeightCapacity || maxVolumeCapacity != basket.maxVolumeCapacity) {
-            return false;
-        }
-        return balls.equals(basket.balls);
+        return this.maxWeightCapacity == basket.maxWeightCapacity && this.maxVolumeCapacity == basket.maxVolumeCapacity
+        && this.balls.equals(basket.balls);
     }
 
     @Override

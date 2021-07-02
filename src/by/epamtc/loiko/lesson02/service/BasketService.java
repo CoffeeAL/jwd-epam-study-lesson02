@@ -1,12 +1,8 @@
 package by.epamtc.loiko.lesson02.service;
 
-import by.epamtc.loiko.lesson02.enumerable.Color;
 import by.epamtc.loiko.lesson02.entity.Ball;
 import by.epamtc.loiko.lesson02.entity.Basket;
-import by.epamtc.loiko.lesson02.exception.NotAvailableBallException;
-import by.epamtc.loiko.lesson02.exception.NotPositiveValueException;
-import by.epamtc.loiko.lesson02.exception.OverVolumeException;
-import by.epamtc.loiko.lesson02.exception.OverWeightException;
+import by.epamtc.loiko.lesson02.enumerable.Color;
 
 import java.util.List;
 
@@ -16,85 +12,102 @@ import java.util.List;
  */
 public final class BasketService {
 
-    private static final BallService ballService = new BallService();
+    private BallService ballService = new BallService();
     private Basket basket;
-
-    public BasketService() {
-    }
 
     public BasketService(Basket basket) {
         this.basket = basket;
     }
 
-    public double findTotalWeight(List<Ball> balls) {
-        return balls.stream()
-                .mapToDouble(w -> w.getWeight())
-                .sum();
+    public double findTotalWeight() {
+        return basket.calculateBallsInBasketWeight();
     }
 
-    public double findTotalVolume(List<Ball> balls) {
-        return balls.stream()
-                .mapToDouble(v -> v.getVolume())
-                .sum();
+    public double findTotalVolume() {
+        return basket.calculateBallsInBasketVolume();
     }
 
-    public long findColorBalls(Color color) {
-        return basket.getBalls().stream()
-                .filter(c -> c.getColor() == color)
-                .count();
-    }
-
-    public void putBall(Ball ball) throws NotPositiveValueException, OverWeightException, OverVolumeException,
-                                          NotAvailableBallException {
-        ballService.checkBallWeightVolume(ball);
-        checkBasketMaxWeightVolumeCapacity(basket);
-        checkPossibilityPutBallInBasket(basket, ball);
-        basket.putBallInBasket(ball);
-    }
-
-    public void pullBall(Ball ball) throws NotPositiveValueException, NotAvailableBallException {
-        ballService.checkBallWeightVolume(ball);
-        checkPossibilityPullBallFromBasket(basket, ball);
-        basket.pullBallFromBasket(ball);
-    }
-
-    public void checkBasketMaxWeightVolumeCapacity(Basket basket) throws NotPositiveValueException {
-        if (basket.getMaxWeightCapacity() <= 0 || basket.getMaxVolumeCapacity() <= 0) {
-            throw new NotPositiveValueException("Максимальный вес, который можно положить в корзину, и " +
-                    "объём, вмещаемый в корзину, должны принимать положительные значения.");
+    public int findColorBalls(Color color) {
+        if (color == null) {
+            return -1;
         }
+        List<Ball> balls = basket.getBalls();
+        int counter = 0;
+        for (Ball ball : balls) {
+            if (ball.getColor() == color) {
+                counter++;
+            }
+        }
+        return counter;
     }
 
-    public void checkPossibilityPutBallInBasket(Basket basket, Ball ball)
-            throws NotAvailableBallException, OverWeightException, OverVolumeException {
-        if (basket.getBalls().contains(ball) || ball.isInBasket()) {
-            throw new NotAvailableBallException("Этот мяч уже лежит в этой или другой корзине.");
+    public boolean putBall(Ball ball) {
+        if (ball == null) {
+            return false;
         }
-        if (basket.weightLeft() < ball.getWeight()) {
-            throw new OverWeightException("Корзина не выдержит вес этого мяча.");
+        ballService.setBall(ball);
+        if (isNotValidBallOrBasketParameters()) {
+            return false;
         }
-        if (basket.volumeLeft() < ball.getVolume()) {
-            throw new OverVolumeException("В корзине нет места для этого мяча.");
-        }
+        return checkPossibilityPutBallInBasket(ball) ? basket.putBallInBasket(ball) : false;
     }
 
-    public void checkPossibilityPutBallsInBasket(Basket basket, List<Ball> balls)
-            throws NotAvailableBallException, OverWeightException, OverVolumeException {
-        if (balls.stream().mapToDouble(w -> w.getWeight()).sum() > basket.getMaxWeightCapacity()) {
-            throw new OverWeightException("Мячи слишком тяжёлые для добавления в корзину.");
-        }
-        if (balls.stream().mapToDouble(v -> v.getVolume()).sum() > basket.getMaxVolumeCapacity()) {
-            throw new OverVolumeException("Мячи не помещаются в корзину.");
-        }
+    private boolean isNotValidBallOrBasketParameters() {
+        return !ballService.areCorrectWeightAndVolume() || !areCorrectMaxWeightAndVolumeCapacity();
     }
 
-    public void checkPossibilityPullBallFromBasket(Basket basket, Ball ball) throws NotAvailableBallException {
-        if (!basket.getBalls().contains(ball)) {
-            throw new NotAvailableBallException("Мяча в этой корзине нет.");
+    private boolean areCorrectMaxWeightAndVolumeCapacity() {
+        return basket.getMaxWeightCapacity() > 0 && basket.getMaxVolumeCapacity() > 0;
+    }
+
+    private boolean checkPossibilityPutBallInBasket(Ball ball) {
+        return !basket.getBalls().contains(ball) && basket.weightLeft() >= ball.getWeight() &&
+                basket.volumeLeft() >= ball.getVolume();
+    }
+
+    public boolean putBalls(List<Ball> balls) {
+        if (balls == null) {
+            return false;
         }
+        for (Ball ball : balls) {
+            ballService.setBall(ball);
+            if (isNotValidBallOrBasketParameters()) {
+                return false;
+            }
+        }
+        return checkPossibilityPutCollectionOfBallsInBasket(balls) ? basket.putBallsInBasket(balls) : false;
+    }
+
+    public boolean pullBall(Ball ball) {
+        if (ball == null) {
+            return false;
+        }
+        ballService.setBall(ball);
+        if (isNotValidBallOrBasketParameters()) {
+            return false;
+        }
+        return checkPossibilityPullBallFromBasket(ball) ? basket.pullBallFromBasket(ball) : false;
+    }
+
+    private boolean checkPossibilityPutCollectionOfBallsInBasket(List<Ball> balls) {
+        double totalWeightBalls = 0.0;
+        double totalVolumeBalls = 0.0;
+        for (Ball ball : balls) {
+            totalWeightBalls += ball.getWeight();
+            totalVolumeBalls += ball.getVolume();
+        }
+        return totalWeightBalls <= basket.weightLeft() && totalVolumeBalls <= basket.volumeLeft();
+    }
+
+    private boolean checkPossibilityPullBallFromBasket(Ball ball) {
+        return basket.getBalls().contains(ball);
     }
 
     public Basket getBasket() {
         return basket;
+    }
+
+    public void setBasket(Basket basket) {
+        this.basket = basket;
     }
 }

@@ -1,12 +1,9 @@
 package by.epamtc.loiko.lesson02;
 
-import by.epamtc.loiko.lesson02.enumerable.Color;
 import by.epamtc.loiko.lesson02.entity.Ball;
 import by.epamtc.loiko.lesson02.entity.Basket;
-import by.epamtc.loiko.lesson02.exception.NotAvailableBallException;
+import by.epamtc.loiko.lesson02.enumerable.Color;
 import by.epamtc.loiko.lesson02.exception.NotPositiveValueException;
-import by.epamtc.loiko.lesson02.exception.OverVolumeException;
-import by.epamtc.loiko.lesson02.exception.OverWeightException;
 import by.epamtc.loiko.lesson02.service.BasketService;
 import by.epamtc.loiko.lesson02.util.ListBallFactory;
 
@@ -23,23 +20,18 @@ import java.util.List;
  */
 public class BasketBallRunner {
 
-    public static Color blueColor = Color.BLUE;
+    public static final Color BLUE_COLOR = Color.BLUE;
 
     public static void main(String[] args) {
-        List<Ball> balls;
+        List<Ball> balls = ListBallFactory.createListOfBalls();
         Basket basket = new Basket(20.0, 20.0);
         BasketService basketService = new BasketService(basket);
-        double totalWeight;
-        long amountBlueBalls;
+        basketService.putBalls(balls);
+        double totalWeight = basketService.findTotalWeight();
+        long amountBlueBalls = basketService.findColorBalls(BLUE_COLOR);
         try {
-            balls = ListBallFactory.createListOfBalls();
-            basketService.checkBasketMaxWeightVolumeCapacity(basketService.getBasket());
-            basketService.checkPossibilityPutBallsInBasket(basketService.getBasket(), balls);
-            basket.putBallsInBasket(balls);
-            totalWeight = basketService.findTotalWeight(basket.getBalls());
-            amountBlueBalls = basketService.findColorBalls(blueColor);
-            printReport(totalWeight, blueColor, amountBlueBalls);
-        } catch (NotPositiveValueException | OverWeightException | OverVolumeException | NotAvailableBallException e) {
+            printReport(totalWeight, BLUE_COLOR, amountBlueBalls);
+        } catch (NotPositiveValueException e) {
             throw new RuntimeException(e.getMessage());
         }
     }

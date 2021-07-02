@@ -1,9 +1,7 @@
 package by.epamtc.loiko.lesson02.util;
 
-import by.epamtc.loiko.lesson02.enumerable.Color;
 import by.epamtc.loiko.lesson02.entity.Ball;
-import by.epamtc.loiko.lesson02.exception.NotPositiveValueException;
-import by.epamtc.loiko.lesson02.service.BallService;
+import by.epamtc.loiko.lesson02.enumerable.Color;
 
 import java.util.List;
 
@@ -13,7 +11,7 @@ import java.util.List;
  */
 public class ListBallFactory {
 
-    public static List<Ball> createListOfBalls() throws NotPositiveValueException {
+    public static List<Ball> createListOfBalls() {
         List<Ball> balls = List.of(new Ball(Color.RED, 1.8, 2.5),
                                    new Ball(Color.GREEN, 0.62, 0.4),
                                    new Ball(Color.YELLOW, 1.3, 2.1),
@@ -26,10 +24,6 @@ public class ListBallFactory {
                                    new Ball(Color.BLUE, 2.1, 1.89),
                                    new Ball(Color.RED, 0.98, 1.14),
                                    new Ball(Color.PURPLE, 1.2, 0.97));
-        BallService ballService = new BallService();
-        for (Ball ball : balls) {
-            ballService.checkBallWeightVolume(ball);
-        }
         return balls;
     }
 }

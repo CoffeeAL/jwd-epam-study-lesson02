@@ -13,9 +13,11 @@ public class Ball implements Serializable {
     private Color color;
     private double weight;
     private double volume;
-    private boolean isInBasket;
 
     public Ball() {
+        color = Color.BLACK;
+        weight = 1.0;
+        volume = 1.0;
     }
 
     public Ball(Color color, double weight, double volume) {
@@ -46,14 +48,6 @@ public class Ball implements Serializable {
 
     public void setVolume(double volume) {
         this.volume = volume;
-    }
-
-    public boolean isInBasket() {
-        return isInBasket;
-    }
-
-    public void setInBasket(boolean inBasket) {
-        isInBasket = inBasket;
     }
 
     @Override
